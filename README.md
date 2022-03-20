@@ -47,7 +47,7 @@ Foi utilizado Swegger para desenvolver a API. O banco de dados consta na soluç�
 ## ⌚ Futuro Do Projeto
 
 Para o futuro do projeto será implementado um site WEB de uma biblioteca que irá consumir essa API.<br />
-A API irá se comunicar com o banco de dados desenvolvido em SQL Server.<br />
+A API irá se comunicar com o banco de dados desenvolvido em SQL Server.✅<br />
 A API terá algumas requisições referente a estatística de utilização do mesmo, informando possivelmente os seguintes campos:
   - Quantidade de requisições por tempo.
   - Quantidade de requisições de um atributo por tempo.
