@@ -1,4 +1,5 @@
-﻿using BookAPI.Model;
+﻿using BookAPI.Controllers;
+using BookAPI.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,41 +9,77 @@ namespace BookAPI.Repositories
 {
     public class BookRepositorio : IBookRepositorio
     {
-        public BookContext _context; 
+        public BookContext _context;
+        public ConexaoController _conexao;
 
         public BookRepositorio(BookContext context)
         {
-            _context = context; 
+            _context = context;
+            _conexao = new ConexaoController();
         }
-        public async Task Delete(int Idbook)
+        public Retorno Delete(int IdBook)
         {
-            Book bookToDelete = await _context.Books.FindAsync(Idbook);
-            _context.Books.Remove(bookToDelete);
-            await _context.SaveChangesAsync();
-        }
+            Dictionary<string, object> parametros = new Dictionary<string, object>();
+            Retorno retorno = new Retorno();
 
-        public async Task<IEnumerable<Book>> Get()
-        {
-            return await _context.Books.ToListAsync();
-        }
+            parametros.Add("@IdBook", IdBook);
+            retorno.retornoProcedure = _conexao.Executar("dbo.Bib_Livros_Del", parametros);
 
-        public async Task<Book> Get(int IdBook)
-        {
-            return await _context.Books.FindAsync(IdBook);
-        }
+            if(retorno.retornoProcedure == null)
+            {
+                retorno.retornoProcedure = "Livro deletado com sucesso.";
+            }
 
-        public async Task<Book> Insert(Book book)
-        {
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
-            return book;
+            return retorno;
         }
 
-        public async Task Update(Book book)
+        public IEnumerable<Book> Get()
         {
-            _context.Entry(book).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return _conexao.GetLista<Book>("dbo.Bib_Livros_Sel");
+        }
+
+        public Book Get(int IdBook)
+        {
+            Dictionary<string, object> parametros = new Dictionary<string, object>();
+            parametros.Add("@IdBook", IdBook);
+            return _conexao.GetLista<Book>("dbo.Bib_Livros_Sel", parametros).FirstOrDefault();
+        }
+
+        public Retorno Insert(Book book)
+        {
+            Retorno retorno = new Retorno();
+
+            Dictionary<string, object> parametros = new Dictionary<string, object>();
+            parametros.Add("@Autor", book.Autor);
+            parametros.Add("@Titulo", book.Titulo);
+            parametros.Add("@Descricao", book.Descricao);
+
+            retorno.retornoProcedure = _conexao.Executar("dbo.Bib_Livros_Ins", parametros);
+
+            if (retorno.retornoProcedure == null)
+            {
+                retorno.retornoProcedure = "Livro inserido com sucesso.";
+            }
+            return retorno;
+        }
+
+        public Retorno Update(Book book)
+        {
+            Retorno retorno = new Retorno();
+
+            Dictionary<string, object> parametros = new Dictionary<string, object>();
+            parametros.Add("@IdBook", book.IdBook);
+            parametros.Add("@Autor", book.Autor);
+            parametros.Add("@Titulo", book.Titulo);
+            parametros.Add("@Descricao", book.Descricao);
+
+            retorno.retornoProcedure = _conexao.Executar("dbo.Bib_Livros_Upd", parametros);
+
+            if (retorno.retornoProcedure == null)
+            {
+                retorno.retornoProcedure = "Livro alterado com sucesso.";
+            }
+            return retorno;
         }
     }
 }

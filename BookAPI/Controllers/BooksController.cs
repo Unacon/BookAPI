@@ -17,64 +17,33 @@ namespace BookAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Book>> GetBook()
+        public IEnumerable<Book> GetBook()
         {
-            return await _bookRepositorio.Get();
+            return _bookRepositorio.Get();
         }
 
         [HttpGet("{IdBook}")]
-        public async Task<ActionResult<Book>> GetBook(int IdBook)
+        public ActionResult<Book> GetBook(int IdBook)
         {
-            return await _bookRepositorio.Get(IdBook);
+            return _bookRepositorio.Get(IdBook);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Book>> PostBook([FromBody] Book book)
+        public ActionResult<Retorno> PostBook([FromBody] Book book)
         {
-            Book validaBook = await _bookRepositorio.Get(book.IdBook);
-            if(validaBook == null)
-            {
-                Book newBook = await _bookRepositorio.Insert(book);
-                return CreatedAtAction(nameof(GetBook), new { id = newBook.IdBook }, newBook);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return _bookRepositorio.Insert(book);
         }
 
         [HttpDelete("{Idbook}")]
-        public async Task<ActionResult> DeleteBook(int Idbook)
+        public ActionResult<Retorno> DeleteBook(int Idbook)
         {
-            Book bookToDelete = await _bookRepositorio.Get(Idbook);
-            if (bookToDelete != null)
-            {
-                await _bookRepositorio.Delete(bookToDelete.IdBook);
-                return NoContent();
-            }
-            else
-            {
-            return NotFound();
-            }
+            return _bookRepositorio.Delete(Idbook);
         }
 
         [HttpPut]
-        public async Task<ActionResult> Update(int idBook, [FromBody] Book book)
+        public ActionResult<Retorno> Update([FromBody] Book book)
         {
-            if (book.IdBook == idBook)
-            {
-                Book validaBook = await _bookRepositorio.Get(idBook);
-                if(validaBook == null)
-                {
-                    return BadRequest();
-                }
-                await _bookRepositorio.Update(book);
-                return NoContent();
-            }
-            else
-            {
-                return BadRequest();
-            }
+            return _bookRepositorio.Update(book);
         }
     }
 }

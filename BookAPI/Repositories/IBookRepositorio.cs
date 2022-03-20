@@ -6,10 +6,10 @@ namespace BookAPI.Repositories
 {
     public interface IBookRepositorio
     {
-        Task<IEnumerable<Book>> Get();
-        Task<Book> Get(int IdBook);
-        Task<Book> Insert(Book book);
-        Task Update(Book book);
-        Task Delete(int Idbook);
+        IEnumerable<Book> Get();
+        Book Get(int IdBook);
+        Retorno Insert(Book book);
+        Retorno Update(Book book);
+        Retorno Delete(int Idbook);
     }
 }

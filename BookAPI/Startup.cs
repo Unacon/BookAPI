@@ -29,8 +29,6 @@ namespace BookAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connection = Configuration["ConexaoSqlite:SqliteConnectionString"];
-            IServiceCollection serviceCollection = services.AddDbContext<BookContext>(x => x.UseSqlite(connection));
             services.AddScoped<IBookRepositorio, BookRepositorio>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
